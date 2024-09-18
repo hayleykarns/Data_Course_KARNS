@@ -1,0 +1,39 @@
+
+
+csv_files<-list.files (path='Data/', pattern='.csv$', full.names = TRUE)
+# Listing files in Data_Course_KARNS and Data that are .csv files
+
+length(csv_files)
+
+df<-read.csv('Data/wingspan_vs_mass.csv')
+
+head(df, n=5)
+
+
+b_files<-list.files(path='Data/', pattern= '^b', full.names = TRUE, recursive=TRUE)
+
+
+for (i in b_files) (readLines(i, n=1))
+for (i in b_files) {
+  first_line <- readLines(i, n = 1)
+  print(first_line)
+}
+
+csv_directory <- 'Data/'
+#sets directory containing csv files
+
+csv_files <-list.files
+#listed csv files in directory 
+
+.csv_files<-list.files(path='Data/', pattern= '\\.csv', full.names= TRUE)
+#created list of all .csv files in the Data directory
+
+data_list <-list()
+#create data list object
+
+for (a in .csv_files){ csv_lines<-readLines(a, n=1)} 
+#creates for loop
+
+print(csv_lines)
+#prints data
+
