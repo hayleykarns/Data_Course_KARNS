@@ -1,0 +1,102 @@
+---
+title: "Petrology Research"
+output: html_document
+---
+
+(https://hayleykarns.github.io/BIOL3100/)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Deformation-enhanced Diffusive Loss of Titanium in Quartz During Greenschist-facies Crystal-plastic Deformation, Wasatch Fault Zone, Utah.
+
+### RESEARCH QUESTION
+  Investigate the diffusion of titanium in Quartz grains from deformed mylonite from the Wasatch Fault zone to better understand the timescales and temperatures at which deformation processes occur.
+
+### INTRODUCTION
+
+The Wasatch Faul Zone  (WFZ) us a is a ~400 km-long fault that forms the eastern boundary of the Basin and Range riftprovince. At the southern end of the Salt Lake Valley, the WFZ crosscuts and exposes the Little Cottonwood stock (LCS) in its footwall. Exhumed remnants of mylonite crop out in the footwall of the WFZ.
+
+![Schematic of Wasatch Fault Zone with sample locations, Stearns et. al 2020 ](C:/Users/User/Desktop/Data_Course_KARNS/FINAL_PROJECT/map.svg)
+
+
+For this project, two samples were used, one being a granite sample from the Little Cottonwood Stock (MS01), an intrusive igneous body, the other being a mylonite rock from the Wasatch Fault Shear zone taken near Alta, Utah (NU02). 
+
+
+
+### METHODS
+
+Cathodoluminescence (CL) images were taken on a scanning electron microsope of quartz grains and used to verify if CL brightness could be used as a proxy for titanium concentrations.
+
+![SEM CL images of the mylonite (NU02)](C:/Users/User/Desktop/Data_Course_KARNS/FINAL_PROJECT/mylonite_cl.svg)
+
+
+
+
+
+Quartz ribbons within the mylonite contain ubiquitous subgrains consistent with bulging recrystallization and subgrain rotation recrystallization deformation mechanisms that are visible both optically and in EBSD maps. Quartz in the granite have high overall CL brightness, patchy zoning, and healed fractures, which are interpreted to record magmatic crystallization, subsequent hydrothermal recrystallization, and a small amount of cataclastic deformation. Quartz subgrains in the mylonite consistently have CL-bright cores that darken gradationally towards the subgrain rims. The CL profiles resemble error function diffusion profiles and are interpreted to represent a loss of Ti in quartz by volume diffusion. 
+
+![SEM image of Protolith with EPMA sample locations](C:/Users/User/Desktop/Data_Course_KARNS/FINAL_PROJECT/protolith_cl.svg)
+
+![SEM image of mylonite with EPMA sampling locations](C:/Users/User/Desktop/Data_Course_KARNS/FINAL_PROJECT/mylo_cl.svg)
+
+
+### DIFFUSION MODELING
+
+A diffusion model was created to extrapolate Ti concentrations from quartz grains in SEM images under cathodoluminescence. This was done by extracting grayscale values along a transect to create a profile given distance and grayscale value in the grain. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library()
+
+
+diff<-read.csv("Diff_comb.csv")
+
+View(diff)
+
+ggplot(diff) +
+  geom_line(aes(x = x_1, y = y_1), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_2, y = y_2), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_3, y = y_3), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_4, y = y_4), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_5, y = y_5), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_6, y = y_6), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_7, y = y_7), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_8, y = y_8), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_9, y = y_9), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_10, y = y_10), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_11, y = y_11), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_12, y = y_12), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_13, y = y_13), color = "blue", alpha = 0.5, size = 1.5) +
+  geom_line(aes(x = x_14, y = y_14), color = "blue", alpha = 0.5, size = 1.5) +
+  labs(
+    title = "Diffusion Modeling for Mylonite",
+    x = "Distance",
+    y = "Normalized Grayvalue"
+  )
+
+```
+
+
+
+Cumulative diffusion profiles of the mylonite based on normalized gray scale values from grain profiles. 
+
+### DATING
+
+![Previous petrochronology U-Pb dating data from Stearns et. al 2020](C:/Users/User/Desktop/Data_Course_KARNS/FINAL_PROJECT/dating_stearns.svg)
+
+
+
+
+### CONCLUSIONS
+The analysis of the CL images and the titanium concentrations in the quartz provide insight into the titanium mobility in quartz during greenschist-facies ductile deformation. Additionally, it gives further understanding of the Wasatch Fault zone mechanisms.
+
+    -Lower titanium concentrations observed in the mylonite compared to the protolith are evidence of titanium diffusion through quartz due to deformation.
+    
+    -Titanium concentrations obtained from the EPMA work provided a means to calculate diffusion temperatures, and were estimated to be ~510 C for the mylonite and ~620 C for the protolith.
+    
+    -The diffusion model returned plausible time and temperature estimates for the mylonite deformation based on known geologic history which were ~450 C for approximately 17 Myr The best fit diffusion model required an assumption of isothermal conditions.
+
+ 
+ 
