@@ -1,0 +1,109 @@
+library(tidyverse)
+library(ggplot2)
+library(broom)
+
+# QUESTION 1: CLEAN AND MAKE GRAPH
+
+setwd('C:/Users/User/Desktop/Data_Course_KARNS/Exam_3')
+data <- read.csv("C:/Users/User/Desktop/Data_Course_KARNS/Exam_3/FacultySalaries_1995.csv")
+
+faculty_data <- data %>%
+  select(-FedID, -State, -NumFullProfs, -NumAssocProfs, -NumAssistProfs, -NumInstructors, -NumFacultyAll)
+
+salary_data <- faculty_data %>%
+  pivot_longer(cols = c("AvgFullProfSalary", "AvgAssocProfSalary", "AvgAssistProfSalary"),
+               names_to = "Rank",
+               values_to = "Salary")
+
+salary_data$Rank <- factor(salary_data$Rank, 
+                           levels = c("AvgAssistProfSalary", "AvgAssocProfSalary", "AvgFullProfSalary"),
+                           labels = c("Assist", "Assoc", "Full"))
+
+# Filter out "VIIB"
+salary_data_filtered <- salary_data %>%
+  filter(Tier != "VIIB")
+
+
+ggplot(salary_data_filtered, aes(x = Tier, y = Salary, fill = Rank)) +
+  geom_boxplot(position = position_dodge(width = 0.75)) +  
+  scale_fill_manual(values = c("red", "green", "blue")) + 
+  labs(x = "Tier", y = "Salary", fill = "Rank") +
+  theme_minimal() +
+  theme(
+    legend.position = "right",  
+    axis.text.x = element_text(angle = 45, hjust = 1)  
+  )
+
+#QUESTION 2: ANOVA MODEL
+
+anova_model <- aov(Salary ~  UnivName + Tier + Rank, data = salary_data_filtered)
+
+
+summary(anova_model)
+
+#QUESTION 3: CLEAN “Juniper_Oils.csv”
+
+
+setwd('C:/Users/User/Desktop/Data_Course_KARNS/Exam_3')
+
+
+jun<- read_csv("Juniper_Oils.csv")
+View(jun)
+
+
+jun_clean <- jun %>%
+  pivot_longer(
+    cols = `alpha-pinene`:`thujopsenal`,
+    names_to = "Chemical",
+    values_to = "Concentration"
+  )
+
+
+jun <- jun %>% 
+  mutate(
+    Raw_Exit_Holes = ifelse(is.na(Raw_Exit_Holes), 0, Raw_Exit_Holes),
+    Living_Larvae = ifelse(is.na(Living_Larvae), 0, Living_Larvae)
+  )
+
+View(jun_clean)
+
+#QUESSTION 4: GRAPH
+
+jun_clean %>%
+  ggplot(aes(x = YearsSinceBurn, y = Concentration)) +
+  geom_point() +
+  geom_smooth(method = "glm") + 
+  theme_minimal() +
+  facet_wrap(~Chemical, scales = "free_y")+
+  labs(
+    title = "Concentration of Selected Chemicals Over Time",
+    x = "Years Since Burn",
+    y = "Chemical Concentration"
+  )
+
+#QUESTION 5: LINEAR MODEL
+
+glm_jun <- jun_clean %>%
+  group_by(Chemical) %>%                  
+  nest() %>%                              
+  mutate(
+    glm_model = map(data, ~ glm(Concentration ~ YearsSinceBurn, data = .x, family = gaussian())),
+    glm_summary = map(glm_model, tidy)
+  ) %>%
+  unnest(glm_summary) %>%                 
+  filter(term == "YearsSinceBurn" | str_detect(term, ":")) %>%  
+  
+  
+  select(Chemical, term, estimate, std.error, statistic, p.value) %>% 
+  arrange(p.value)                      
+
+print(glm_jun)
+
+
+jun_sig <- glm_jun %>%
+  filter(p.value < 0.1) %>%
+  arrange(p.value)            
+
+print(jun_sig)
+
+
